@@ -39,7 +39,7 @@ class Account(BaseModel):
         ...,
         description="Имя аккаунта для обращения в чате.",
         example="my_yandex_account",
-        min_length=3,
+        min_length=1,
         max_length=64
     )
     login: str = Field(
