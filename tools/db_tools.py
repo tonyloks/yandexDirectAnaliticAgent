@@ -32,30 +32,30 @@ class Account(BaseModel):
     id: Optional[int] = Field(
         default=None,
         description="Уникальный идентификатор записи.",
-        example=1,
+        json_schema_extra={"example": 1},
         ge=1
     )
     account_name: str = Field(
         ...,
         description="Имя аккаунта для обращения в чате.",
-        example="my_yandex_account",
+        json_schema_extra={"example": "my_yandex_account"},
         min_length=1,
         max_length=64
     )
     login: str = Field(
         ...,
         description="Логин пользователя в Яндексе.",
-        example="user@yandex.ru"
+        json_schema_extra={"example": "user@yandex.ru"}
     )
     api_token: str = Field(
         ...,
         description="OAuth-токен для доступа к API.",
-        example="AgAAAAABCD1234..."
+        json_schema_extra={"example": "AgAAAAABCD1234..."}
     )
     goal_ids: Optional[List[int]] = Field(
         default=None,
         description="Список ID целей Яндекс.Метрики (int, 8-14 цифр).",
-        example=[12345678, 98765432101234]
+        json_schema_extra={"example": [12345678, 98765432101234]}
     )
 
     @field_validator('goal_ids')
