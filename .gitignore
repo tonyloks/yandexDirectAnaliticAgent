@@ -21,4 +21,5 @@ __pycache__/
 
 # Системные
 .DS_Store
-Thumbs.db 
+Thumbs.db
+.cursor/ 
