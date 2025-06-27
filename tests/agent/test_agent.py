@@ -114,3 +114,20 @@ def test_agent_delete_account_via_prompt():
     print("[DELETE_ACCOUNT] Текст ответа:", getattr(resp, "content", None))
     assert hasattr(resp, "content")
     assert resp.content, "Ответ агента пустой"
+
+@pytest.mark.skipif(os.getenv("CI") == "true", reason="Пропускать в CI без ключа и внешнего API")
+def test_agent_add_account_without_goals():
+    """Проверяет, что агент возвращает ошибку при добавлении аккаунта без целей."""
+    prompt = "Добавь аккаунт с именем 'no_goals_user', логином 'login', токеном 'token'."
+    resp = agent.run(prompt)
+    print("[ADD_ACCOUNT_NO_GOALS] Текст ответа:", getattr(resp, "content", None))
+    assert hasattr(resp, "content")
+    assert resp.content, "Ответ агента пустой"
+    # Проверяем, что в ответе есть сообщение об ошибке или предупреждение
+    assert (
+        "ошибк" in resp.content.lower()
+        or "цель" in resp.content.lower()
+        or "валид" in resp.content.lower()
+        or "не указ" in resp.content.lower()
+        or "goal" in resp.content.lower()
+    )
