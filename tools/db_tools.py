@@ -95,7 +95,7 @@ metadata.create_all(engine)
 # endregion
 
 # region CRUD-функции
-def add_account(account_name: str, login: str, api_token: str, goal_ids: Optional[List[int]] = None) -> OperationResult:
+def add_account(account_name: str, login: str, api_token: str, goal_ids: Optional[List[int]]) -> OperationResult:
     """
     Добавляет новый аккаунт в БД.
 
