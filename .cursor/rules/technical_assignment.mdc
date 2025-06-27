@@ -1,0 +1,103 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Техническое задание (v2.2): LLM Агент для Яндекс.Директ на базе Agno
+
+## 1. Введение
+
+Настоящий документ описывает требования к разработке LLM-агента с использованием Python-библиотеки `agno`. Цель проекта — создание интеллектуального ассистента в интерфейсе Streamlit для управления аккаунтами Яндекс.Директа и получения статистики через диалог на естественном языке.
+
+## 2. Структура проекта
+
+yandexDirectAnaliticAgent/
+│
+├── agent/
+│   ├── __init__.py
+│   ├── agent_state.py      # Определение состояния (Box) и входящих сообщений (Inbox)
+│   └── main_agent.py       # Инициализация и логика агента Agno
+│
+├── database/
+│   └── accounts.sqlite     # Файл базы данных SQLite
+│
+├── tools/
+│   ├── __init__.py
+│   ├── db_tools.py         # Инструменты для работы с БД аккаунтов
+│   └── yandex_direct_tools.py # Инструменты для работы с API Яндекс.Директа
+│
+├── logger/ # Файл с конфигурациями логгера библиотеки Logger
+├── logs/ # Файлы с логами с ротацией в 500 кб
+├── main.py               # Основной файл для запуска Streamlit приложения
+├── .env                  # Файл для хранения секретов (API ключи LLM, Яндекса)
+└── requirements.txt      # Список зависимостей проекта
+
+## 3. Описание базы данных (SQLite)
+
+- **Название таблицы:** `direct_accounts`
+- **Структура таблицы:**
+    - `id` (INTEGER, PRIMARY KEY) - Уникальный идентификатор записи.
+    - `account_name` (TEXT, NOT NULL, UNIQUE) - Имя аккаунта для обращения в чате.
+    - `login` (TEXT, NOT NULL) - Логин пользователя в Яндексе.
+    - `api_token` (TEXT, NOT NULL) - OAuth-токен для доступа к API.
+    - `goal_ids` (TEXT) - Список ID целей Яндекс.Метрики, разделенных запятыми.
+- **Инициализация**
+    Таблица в базе SQlite должна инициализироваться при запуске агента.
+
+## 4. Описание инструментов (Tools)
+
+Функции в модулях `tools/` будут переданы в экземпляр агента `agno` в качестве его набора инструментов.
+
+### 4.1. Инструменты для работы с БД (`tools/db_tools.py`)
+
+
+- `add_account(account_name: str, login: str, api_token: str, goal_ids: str = None) -> str`
+- `update_account_goals(account_name: str, goal_ids: str) -> str`
+- `get_account(account_name: str) -> dict`
+- `delete_account(account_name: str) -> str`
+- `list_accounts() -> list[str]`
+
+### 4.2. Инструменты для работы с API Яндекс.Директ (`tools/yandex_direct_tools.py`)
+
+- `get_campaign_statistics(api_token: str, login: str, campaign_ids: list[str], start_date: str, end_date: str) -> pd.Dataframe`
+- `get_account_balance(api_token: str, login: str) -> pd.Dataframe`
+
+### 4.3. Инструменты для анализа и визуализации (`tools/yandex_direct_tools.py`)
+- ``
+
+## 5. Логика работы Агента (на базе Agno)
+
+Ядро системы — агент `agno`, работающий в цикле "состояние-обработка-ответ".
+
+**Цикл обработки в `main.py`:**
+    - Пользователь вводит сообщение в Streamlit.
+    - Сообщение отправляется в агента.
+    - Запускается основной метод агента.
+    - Ответ агента отображается в Streamlit.
+
+## 6. Управление зависимостями и запуск
+
+- Для управления зависимостями используется `uv`.
+- `requirements.txt` должен содержать:
+    - `agno`
+    - `streamlit`
+    - `sqlalchemy`
+    - `python-dotenv`
+    - `requests`
+- **Команды для запуска:**
+  ```bash
+  # Установить uv, если его нет
+  pip install uv
+  # Создать и активировать окружение
+  uv venv
+  source .venv/bin/activate
+  # Установить зависимости
+  uv pip install -r requirements.txt
+  # Запустить приложение
+  streamlit run main.py
+  ```
+
+## 7. Логгирование
+- Добавляй все подробные уровни для логов
+
+  
