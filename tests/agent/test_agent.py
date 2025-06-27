@@ -13,19 +13,18 @@ def test_openrouter_api_key_loaded():
 
 def test_agent_model_type():
     """Проверяет, что агент использует OpenRouter как модель."""
-    assert agent.agent.model.__class__.__name__ == "OpenRouter"
-    assert hasattr(agent.agent.model, "api_key")
+    assert agent.model.__class__.__name__ == "OpenRouter"
+    assert hasattr(agent.model, "api_key")
 
 def test_agent_tools():
     """Проверяет, что у агента есть все необходимые инструменты."""
-    tool_names = {t.__name__ for t in agent.agent.tools}
+    tool_names = {t.__name__ for t in agent.tools}
     assert {"add_account", "update_account_goals", "get_account", "delete_account", "list_accounts"}.issubset(tool_names)
 
 @pytest.mark.skipif(os.getenv("CI") == "true", reason="Пропускать в CI без ключа и внешнего API")
 def test_agent_model_responds():
     """Проверяет, что агент отвечает на простой запрос."""
     resp = agent.run("Привет! Ты кто?")
-    print("Ответ агента (объект):", resp)
     print("Текст ответа:", getattr(resp, "content", None))
     assert hasattr(resp, "content")
     assert resp.content, "Ответ агента пустой"
