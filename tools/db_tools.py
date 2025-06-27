@@ -53,7 +53,7 @@ class Account(BaseModel):
         json_schema_extra={"example": "AgAAAAABCD1234..."}
     )
     goal_ids: Optional[List[int]] = Field(
-        default=None,
+        ...,
         description="Список ID целей Яндекс.Метрики (int, 8-14 цифр).",
         json_schema_extra={"example": [12345678, 98765432101234]}
     )

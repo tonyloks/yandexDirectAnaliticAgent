@@ -129,5 +129,4 @@ def test_agent_add_account_without_goals():
         or "цель" in resp.content.lower()
         or "валид" in resp.content.lower()
         or "не указ" in resp.content.lower()
-        or "goal" in resp.content.lower()
     )
