@@ -111,6 +111,9 @@ def add_account(account_name: str, login: str, api_token: str, goal_ids: Optiona
     Raises:
         ValueError: Если goal_ids не проходят валидацию (через Pydantic).
     """
+    if not goal_ids:
+        logger.error(f"Ошибка: не указаны цели (goal_ids) для аккаунта '{account_name}'")
+        return OperationResult(success=False, message="Не указаны цели (goal_ids) для аккаунта.")
     try:
         _ = Account(account_name=account_name, login=login, api_token=api_token, goal_ids=goal_ids)
     except ValidationError as e:
